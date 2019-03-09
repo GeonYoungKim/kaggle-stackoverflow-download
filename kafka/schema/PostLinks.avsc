@@ -1,0 +1,32 @@
+{
+    "namespace": "com.naver.shopping.stackoverflow.batch.vo",
+    "type" : "record",
+    "name" : "PostLink",
+    "fields" : [
+        {
+            "name" : "id",
+            "type" : "long",
+            "default" : 0
+        },
+        {
+            "name" : "creation_date",
+            "type" : "string",
+            "default" : ""
+        },
+        {
+            "name" : "link_type_id",
+            "type" : "long",
+            "default" : 0
+        },
+        {
+            "name" : "post_id",
+            "type" : "long",
+            "default" : 0
+        },
+        {
+            "name":"related_post_id",
+            "type":"long",
+            "default" : 0
+        }
+    ]
+}

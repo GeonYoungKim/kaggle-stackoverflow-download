@@ -1,0 +1,72 @@
+{
+    "namespace": "com.naver.shopping.stackoverflow.batch.vo",
+    "type" : "record",
+    "name" : "User",
+    "fields" : [
+        {
+            "name" : "id",
+            "type" : "long",
+            "default" : 0
+        },
+        {
+            "name" : "display_name",
+            "type" : "string",
+            "default" : ""
+        },
+        {
+            "name" : "about_me",
+            "type" : "string",
+            "default" : ""
+        },
+        {
+            "name" : "age",
+            "type" : "string",
+            "default":""
+        },
+        {
+            "name":"creation_date",
+            "type":"string",
+            "default" : ""
+        },
+        {
+            "name":"last_access_date",
+            "type":"string",
+            "default" : ""
+        },
+        {
+            "name":"location",
+            "type":"string",
+            "default" : ""
+        },
+        {
+            "name":"reputation",
+            "type":"long",
+            "default" : 0
+        },
+        {
+            "name":"up_votes",
+            "type":"long",
+            "default" : 0
+        },
+        {
+            "name":"down_votes",
+            "type":"long",
+            "default" : 0
+        },
+        {
+            "name":"views",
+            "type":"long",
+            "default" : 0
+        },
+        {
+            "name":"profile_image_url",
+            "type":"string",
+            "default" : ""
+        },
+        {
+            "name":"website_url",
+            "type":"string",
+            "default":""
+        }
+    ]
+}
