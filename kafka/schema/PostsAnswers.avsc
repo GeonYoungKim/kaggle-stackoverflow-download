@@ -1,5 +1,5 @@
 {
-    "namespace": "com.naver.shopping.stackoverflow.batch.vo",
+    "namespace": "com.naver.shopping.stackoverflow.batch.model.vo",
     "type" : "record",
     "name" : "PostAnswer",
     "fields" : [
