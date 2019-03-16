@@ -12,6 +12,7 @@ class KafkaAvroProducer(threading.Thread):
         self.topic = dict['topic']
         self.table = dict['table']
         self.read_count = dict['read_count']
+        self.start_index = dict['start']
 
     def run(self):
         print("topic => " + self.topic)
@@ -34,7 +35,7 @@ class KafkaAvroProducer(threading.Thread):
         table_schema_dict = {}
         for schema in table.schema:
             table_schema_dict[schema._name] = schema._field_type
-        start_index = 0
+        start_index = self.start_index
         while True:
             # kaggle data select
             results = [dict(x) for x in self.client.list_rows(table, start_index=start_index, max_results=self.read_count)]
@@ -47,9 +48,9 @@ class KafkaAvroProducer(threading.Thread):
                         result[key] = ''
                     if value == None and table_schema_dict[key] in ['INTEGER', 'FLOAT']:
                         result[key] = 0
-                avroProducer.produce(topic=self.topic, value=result, key=result, value_schema=record_schema, key_schema=record_schema)
+                # avroProducer.produce(topic=self.topic, value=result, key=result, value_schema=record_schema, key_schema=record_schema)
 
-            avroProducer.flush()
+            # avroProducer.flush()
             start_index += self.read_count
             print('{0} => {1}'.format(self.topic, start_index))
             if len(results) < self.read_count:
