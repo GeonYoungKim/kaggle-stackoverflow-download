@@ -31,22 +31,26 @@ class KafkaAvroProducer(threading.Thread):
         stackoverflow_tables_meta = self.client.dataset(config.KAGGLE_CONFIG['dataset'], project=config.KAGGLE_CONFIG['project'])
         stackoverflow_tables = self.client.get_dataset(stackoverflow_tables_meta)
         table = self.client.get_table(stackoverflow_tables.table(self.table))
+        table_schema_dict = {}
+        for schema in table.schema:
+            table_schema_dict[schema._name] = schema._field_type
         start_index = 0
         while True:
             # kaggle data select
             results = [dict(x) for x in self.client.list_rows(table, start_index=start_index, max_results=self.read_count)]
-
             # send kaggle data to kafka
             for result in results:
                 for key, value in result.items():
-                    if "date" in key:
+                    if value != None and table_schema_dict[key] == 'TIMESTAMP':
                         result[key] = result[key].now().strftime("%Y-%m-%d %H:%M:%S")
-                    if value == None:
+                    if value == None and table_schema_dict[key] in ['STRING', 'TIMESTAMP']:
+                        result[key] = ''
+                    if value == None and table_schema_dict[key] in ['INTEGER', 'FLOAT']:
                         result[key] = 0
-                print(result)
                 avroProducer.produce(topic=self.topic, value=result, key=result, value_schema=record_schema, key_schema=record_schema)
 
             avroProducer.flush()
             start_index += self.read_count
+            print('{0} => {1}'.format(self.topic, start_index))
             if len(results) < self.read_count:
                 break
