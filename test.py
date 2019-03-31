@@ -12,5 +12,5 @@ from  bq_helper import BigQueryHelper
 bq_assistant = BigQueryHelper(active_project= "bigquery-public-data",
                                        dataset_name = "stackoverflow")
 
-QUERY = "SELECT * FROM `bigquery-public-data.stackoverflow.comments`"
+QUERY = "SELECT count(1) FROM `bigquery-public-data.stackoverflow.comments`"
 print(bq_assistant.query_to_pandas(QUERY))

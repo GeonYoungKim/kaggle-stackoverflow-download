@@ -8,11 +8,13 @@ class KafkaAvroProducer(threading.Thread):
     def __init__(self, dict):
         threading.Thread.__init__(self)
         self.client = bigquery.Client.from_service_account_json('./resources/key_files/maptest-174316-deb1e644e273.json')
+        self.thread_number = dict['thread_number']
         self.avro = dict['avro']
         self.topic = dict['topic']
         self.table = dict['table']
         self.read_count = dict['read_count']
         self.start_index = dict['start']
+        self.thread_trt_max_count = dict['thread_trt_max_count']
 
     def run(self):
         print("topic => " + self.topic)
@@ -33,6 +35,7 @@ class KafkaAvroProducer(threading.Thread):
         stackoverflow_tables = self.client.get_dataset(stackoverflow_tables_meta)
         table = self.client.get_table(stackoverflow_tables.table(self.table))
         table_schema_dict = {}
+        total_count = 0
         for schema in table.schema:
             table_schema_dict[schema._name] = schema._field_type
         start_index = self.start_index
@@ -48,10 +51,13 @@ class KafkaAvroProducer(threading.Thread):
                         result[key] = ''
                     if value == None and table_schema_dict[key] in ['INTEGER', 'FLOAT']:
                         result[key] = 0
-                # avroProducer.produce(topic=self.topic, value=result, key=result, value_schema=record_schema, key_schema=record_schema)
+                avroProducer.produce(topic=self.topic, value=result, key=result, value_schema=record_schema, key_schema=record_schema)
 
-            # avroProducer.flush()
+            avroProducer.flush()
             start_index += self.read_count
-            print('{0} => {1}'.format(self.topic, start_index))
-            if len(results) < self.read_count:
+            total_count += self.read_count
+            print('topic = {0} / thread_number => {1} / start_index={2} / total => {3}'.format(self.topic, self.thread_number, start_index, total_count))
+
+            if len(results) < self.read_count or total_count == self.thread_trt_max_count:
+                print('work end!!')
                 break
