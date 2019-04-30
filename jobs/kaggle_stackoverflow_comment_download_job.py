@@ -10,6 +10,7 @@ comment_count = kaggle_data_reader_util.get_table_count(KAGGLE_CONFIG[CONFIG_TAB
 
 comment_max_index = kaggle_data_reader_util.get_max_index(comment_count)
 downloader_list = []
+print('comment_max_index => {}'.format(comment_max_index))
 
 for index in range(0, comment_max_index):
     downloader_list.append(

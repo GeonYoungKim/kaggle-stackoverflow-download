@@ -18,9 +18,9 @@ for index in range(0, answer_max_index):
                 KAGGLE_CONFIG[CONFIG_TABLES_KEY][CONFIG_ANSWER_KEY]['name'],
                 (index * kaggle_data_reader_util.TABLE_ROW_INTERVAL),
                 kaggle_data_reader_util.TABLE_ROW_INTERVAL
-            )
-        ),
-        FILE_CONFIG['file_path'][CONFIG_ANSWER_KEY]
+            ),
+            FILE_CONFIG['file_path'][CONFIG_ANSWER_KEY]
+        )
     )
 
 for downloader in downloader_list:
