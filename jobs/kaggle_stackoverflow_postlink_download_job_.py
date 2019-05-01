@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, "/home1/irteam/deploy/kaggle-stackoverflow-download")
+
 from configuration.kaggle_configutaion import KAGGLE_CONFIG, FILE_CONFIG
 from support.kaggle_downloader import KaggleDownloader
 from model.kaggle_table import KaggleTable
