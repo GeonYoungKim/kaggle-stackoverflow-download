@@ -31,7 +31,12 @@ class KaggleDownloader(threading.Thread):
                            self.client.list_rows(table, start_index=start_index, max_results=self.read_count)]
                 for result in results:
                     # 파일 출력
-                    file.write(json.dumps(result, default=myconverter))
+                    file.write('{}\t{}\t{}\n'.format(
+                            str(result['id']),
+                            str(result['post_id']),
+                            str(result['related_post_id'])
+                        )
+                    )
                 total_count += self.read_count
                 start_index += self.read_count
                 print('total_index => {}, start_index=> {}'.format(total_count, start_index))
