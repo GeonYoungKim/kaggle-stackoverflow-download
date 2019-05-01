@@ -2,7 +2,7 @@ import threading
 from configuration.kaggle_configutaion import KAGGLE_CONFIG
 from google.cloud import bigquery
 import datetime
-import json
+import re
 
 
 class KaggleDownloader(threading.Thread):
@@ -24,19 +24,14 @@ class KaggleDownloader(threading.Thread):
         table = self.client.get_table(tables.table(self.kaggle_table.table))
         total_count = 0
         start_index = self.kaggle_table.start
-        file = open("{}/{}".format(self.file_path, self.kaggle_table.start), 'w')
+        file = open("{}/{}".format(self.file_path, self.kaggle_table.start), 'w', encoding='UTF8')
         try:
             while True:
                 results = [dict(x) for x in
                            self.client.list_rows(table, start_index=start_index, max_results=self.read_count)]
                 for result in results:
                     # 파일 출력
-                    file.write('{}\t{}\t{}\n'.format(
-                            str(result['id']),
-                            str(result['post_id']),
-                            str(result['related_post_id'])
-                        )
-                    )
+                    file.write(writeStr(self.kaggle_table.table, result))
                 total_count += self.read_count
                 start_index += self.read_count
                 print('total_index => {}, start_index=> {}'.format(total_count, start_index))
@@ -46,6 +41,73 @@ class KaggleDownloader(threading.Thread):
         finally:
             file.close()
 
+
 def myconverter(o):
     if isinstance(o, datetime.datetime):
         return o.__str__()
+
+
+def pre_processing(source):
+    source = re.sub('\n', '@', source)
+    source = re.sub('\t', ' ', source)
+    source = re.sub('<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>', ' ', source)
+    source = re.sub('[^\\uAC00-\\uD7A3xfe0-9a-zA-Z<>:|@\\\\s]', ' ', source)
+    source = re.sub(' +', ' ', source)
+    return source
+
+
+def writeStr(table, obj):
+    if table == 'comments':
+        return '{}`{}`{}`{}`{}`{}`{}\n'.format(
+            str(obj['id']),
+            pre_processing(str(obj['text'])),
+            str(obj['creation_date']),
+            str(obj['post_id']),
+            str(obj['user_id']),
+            str(obj['user_display_name']),
+            str(obj['score'])
+        )
+    elif table == 'posts_answers':
+        return '{}`{}`{}`{}`{}`{}`{}`{}`{}\n'.format(
+            str(obj['id']),
+            pre_processing(str(obj['body'])),
+            str(obj['comment_count']),
+            str(obj['creation_date']),
+            str(obj['owner_display_name']),
+            str(obj['owner_user_id']),
+            str(obj['parent_id']),
+            str(obj['score']),
+            str(obj['tags']).replace('|', ',')
+        )
+    elif table == 'posts_questions':
+        return '{}`{}`{}`{}`{}`{}`{}`{}`{}`{}`{}`{}\n'.format(
+            str(obj['id']),
+            pre_processing(str(obj['title'])),
+            pre_processing(str(obj['body'])),
+            str(obj['answer_count']),
+            str(obj['comment_count']),
+            str(obj['creation_date']),
+            str(obj['favorite_count']),
+            str(obj['owner_display_name']),
+            str(obj['owner_user_id']),
+            str(obj['score']),
+            str(obj['tags']).replace('|', ','),
+            str(obj['view_count'])
+        )
+    elif table == 'users':
+        return '{}`{}`{}`{}`{}`{}`{}`{}\n'.format(
+            str(obj['id']),
+            pre_processing(obj['about_me']),
+            str(obj['age']),
+            str(obj['creation_date']),
+            str(obj['up_votes']),
+            str(obj['down_votes']),
+            str(obj['profile_image_url']),
+            str(obj['website_url'])
+        )
+    elif table == 'post_links':
+        return '{}`{}`{}\n'.format(
+            str(obj['id']),
+            str(obj['post_id']),
+            str(obj['related_post_id'])
+        )
