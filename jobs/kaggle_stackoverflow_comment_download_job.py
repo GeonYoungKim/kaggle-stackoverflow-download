@@ -1,9 +1,12 @@
+import sys
+import os
 from configuration.kaggle_configutaion import KAGGLE_CONFIG, FILE_CONFIG
 from support.kaggle_downloader import KaggleDownloader
 from model.kaggle_table import KaggleTable
 from utils import kaggle_data_reader_util
-import sys
-sys.path.insert(0, "/home1/irteam/deploy/kaggle-stackoverflow-download")
+
+root_path = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+sys.path.insert(0, root_path)
 
 CONFIG_ANSWER_KEY = 'comment'
 CONFIG_TABLES_KEY = 'tables'

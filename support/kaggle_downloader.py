@@ -4,7 +4,6 @@ from google.cloud import bigquery
 import datetime
 import re
 
-
 class KaggleDownloader(threading.Thread):
     def __init__(self, KaggleTable, file_path):
         threading.Thread.__init__(self)
