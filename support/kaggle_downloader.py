@@ -95,8 +95,9 @@ def writeStr(table, obj):
             str(obj['view_count'])
         )
     elif table == 'users':
-        return '{}`{}`{}`{}`{}`{}`{}`{}\n'.format(
+        return '{}`{}`{}`{}`{}`{}`{}`{}`{}\n'.format(
             str(obj['id']),
+            pre_processing(obj['display_name']),
             pre_processing(obj['about_me']),
             str(obj['age']),
             str(obj['creation_date']),
