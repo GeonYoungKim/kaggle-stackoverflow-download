@@ -2,7 +2,7 @@ import threading
 from configuration.kaggle_configutaion import KAGGLE_CONFIG
 from google.cloud import bigquery
 import datetime
-import re
+import base64
 
 class KaggleDownloader(threading.Thread):
     def __init__(self, KaggleTable, file_path):
@@ -47,13 +47,7 @@ def myconverter(o):
 
 
 def pre_processing(source):
-    source = re.sub('\n', '@', source)
-    source = re.sub('\t', ' ', source)
-    source = re.sub('<(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?>', ' ', source)
-    source = re.sub('[^\\uAC00-\\uD7A3xfe0-9a-zA-Z<>:|@\\\\s]', ' ', source)
-    source = re.sub(' +', ' ', source)
-    return source
-
+    return base64.b64encode(source.encode('utf-8'))
 
 def writeStr(table, obj):
     if table == 'comments':

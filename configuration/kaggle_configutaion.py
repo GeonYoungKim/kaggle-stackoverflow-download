@@ -31,7 +31,7 @@ FILE_CONFIG = {
         # "answer" : "C:\\Users\\geonyeongkim\\Desktop\\data\\answer",
         # "question" : "C:\\Users\\geonyeongkim\\Desktop\\data\\question",
         # "link" : "C:\\Users\\geonyeongkim\\Desktop\\data\\link",
-        # "user" : "C:\\Users\\geonyeongkim\\Desktop\\data\\user"
+        # "user" : "C:\\Users\\geonyeongkim\\Desktop\\data\\user",
         "comment": "/home1/irteam/data/comment",
         "answer": "/home1/irteam/data/answer",
         "question": "/home1/irteam/data/question",
